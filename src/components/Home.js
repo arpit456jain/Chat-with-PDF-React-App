@@ -3,7 +3,7 @@ import { Container, Form, Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import Header from "./Header";
 import Footer from "./Footer";
-
+import Spinner from "react-bootstrap/Spinner";
 
 function Home() {
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -11,6 +11,8 @@ function Home() {
   const [summary, setSummary] = useState("");
   const [queryResult, setQueryResult] = useState("");
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loadingAsk, setLoadingAsk] = useState(false);
 
   function handleFileChange(e) {
     setPdf(e.target.files[0]);
@@ -25,6 +27,7 @@ function Home() {
     }
 
     try {
+      setLoadingAsk(true)
       const formData = new FormData();
       formData.append("pdf", pdf);
       formData.append("question", query);
@@ -44,9 +47,13 @@ function Home() {
     } catch (error) {
       toast.error(error.message);
     }
+    finally {
+      setLoadingAsk(false);
+    }
   }
   async function handleSummarize(e) {
     e.preventDefault();
+    setLoading()
 
     if (!pdf) {
       toast.error("Please upload a PDF first!");
@@ -54,6 +61,7 @@ function Home() {
     }
 
     try {
+      setLoading(true)
       const formData = new FormData();
       formData.append("pdf", pdf);
 
@@ -75,6 +83,8 @@ function Home() {
       toast.success("Summary generated!");
     } catch (error) {
       toast.error(error.message);
+    }finally {
+    setLoading(false);
     }
   }
   return (
@@ -101,10 +111,15 @@ function Home() {
             />
           </Form.Group>
 
-          {/* Summarize Button */}
+          {loading ? 
+          <Button variant="info" type="submit" disabled={!pdf} className="mt-2">
+            <Spinner animation="border" variant="dark" />
+          </Button> : 
           <Button variant="info" type="submit" disabled={!pdf} className="mt-2">
             Summarize
           </Button>
+        }
+          
         </Form>
       </Container>
       <Container className="col-lg-7 col-md-10">
@@ -130,10 +145,17 @@ function Home() {
                   />
                 </Form.Group>
 
-                {/* Summarize Button */}
-                <Button variant="info" type="submit" className="mt-2">
+                {
+                  loadingAsk ?
+                   <Button variant="info" type="submit" className="mt-2">
+                   <Spinner animation="border" variant="dark" />
+                </Button>
+                :
+                   <Button variant="info" type="submit" className="mt-2">
                   Ask
                 </Button>
+                }
+                
               </Form>
             </div>
             {queryResult && (
