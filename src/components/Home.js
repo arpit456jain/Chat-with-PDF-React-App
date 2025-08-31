@@ -6,7 +6,7 @@ import Footer from "./Footer";
 
 
 function Home() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const [pdf, setPdf] = useState(null);
   const [summary, setSummary] = useState("");
   const [queryResult, setQueryResult] = useState("");
