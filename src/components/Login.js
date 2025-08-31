@@ -16,6 +16,7 @@ function Login({ setUserID }) {
     const payload = {
       username: username,
       password: password,
+      "project_name" : "chat_with_pdf"
     };
     handleLogin(payload)
       .then((response) => {
@@ -45,7 +46,7 @@ function Login({ setUserID }) {
       })
       .catch((error) => {
         if (error.response) {
-          if (error.response.status === 404) {
+          if (error.response.status === 404 || error.response.status === 403) {
             toast.error("User not found");
           } else if (error.response.status === 401) {
             toast.error("Invalid credentials");

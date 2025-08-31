@@ -20,7 +20,8 @@ function SignUp() {
       "name": name,
       "email":email,
       "username": username,
-      "password": password
+      "password": password,
+      "project_name" : "chat_with_pdf"
     }
       handleSignUp(payload).then(response => {
        
@@ -37,6 +38,9 @@ function SignUp() {
             toast.error("Invalid credentials");
           }else if (error.response.status === 400) {
             toast.error("A user with that username already exists.");
+          }
+          else if (error.response.status === 403) {
+           toast.error("User not found");
           }
            else {
             toast.error("Something went wrong");
